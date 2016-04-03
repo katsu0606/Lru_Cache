@@ -1,5 +1,5 @@
 # Lru_Cache
-A thread-safe memory LRU cache.
+A thread-safe memory LRU cache in Ruby.
 
 #Example
 ```ruby
