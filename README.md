@@ -23,6 +23,10 @@ p cache.list # => ["Lemon", "Apple", "Orange"]
 
 p cache.get("Orange") # => 200
 p cache.list # => ["Orange", "Lemon", "Apple"]
+
+
+cache.set("Banana",400)
+p cache.list # => ["Banana", "Orange", "Lemon"]
 ```
 
 #API
@@ -33,13 +37,13 @@ p cache.list # => ["Orange", "Lemon", "Apple"]
 A default maximum item count is 10.
 
 * `set(key,value)`  
-Set value of key.
+Set the value of key.
 
 * `get(key) # => value`  
 Get the value of key.
 
 * `delete(key)`  
-Delete value at key.
+Delete the value of key.
 
 * `clear()`  
 Clear all items.
