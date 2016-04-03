@@ -2,25 +2,30 @@ require 'thread'
 
 class LruCache
 
+  attr_reader :hash,:list
+
   #-----------------------------------------------------
   # Constructor
   #-----------------------------------------------------
   def initialize(max_count = 10)
     if max_count < 1
-      raise "ArgumentError"
+      raise ArgumentError.new()
     end
 
     @max_item_count = max_count
     @hash = Hash.new
     @list = Array.new(max_count)
-    @m = Mutex.new
+    hash = @hash
+    list = @list
+    @lock = Mutex.new
+
   end
 
   #-----------------------------------------------------
   # Set Method
   #-----------------------------------------------------
   def set(key , value)
-    @m.synchronize {
+    @lock.synchronize {
       if @hash[key] == nil
         @hash[key] = value
 
@@ -36,8 +41,6 @@ class LruCache
       end
 
       @list.unshift(key)
-      p @list
-      p @hash
     }
   end
 
@@ -45,14 +48,12 @@ class LruCache
   # Get Method
   #-----------------------------------------------------
   def get(key)
-    @m.synchronize {
+    @lock.synchronize {
       if @hash[key] == nil
         return nil
       else
         @list.delete(key)
         @list.unshift(key)
-        p @list
-        p @hash
         return @hash[key]
       end
     }
@@ -62,7 +63,7 @@ class LruCache
   # All Clear Method
   #-----------------------------------------------------
   def clear
-    @m.synchronize {
+    @lock.synchronize {
       @max_item_count.times do |i|
         @hash.delete(@list[i])
         @list[i] = nil
@@ -74,7 +75,7 @@ class LruCache
   # Delete Key Method
   #-----------------------------------------------------
   def delete(key)
-    @m.synchronize {
+    @lock.synchronize {
       if @hash.has_key?(key) == false
         return nil
       else
